@@ -3,7 +3,7 @@
 """
 
 
-__version__ = "0.6"
+__version__ = "0.6.1"
 __author__  = "infval"
 
 
@@ -449,7 +449,8 @@ class PSXDisassembler:
                 , " file_index {:X}\n".format(self.start_pc)
                 , "\n"
             ]
-            if self.start_pc == START_ADDR:
+            if self.start_pc == START_ADDR or\
+               self.start_pc == START_ADDR | 0x80000000:
                 del psig_header[4]  # file_index
             self.lines = psig_header + self.lines
 
@@ -809,7 +810,7 @@ class Application(tk.Frame):
                         not self.labels_var.get(), self.psig_var.get())
         try:
             self.pd.write_to_file(self.path_output_var.get())
-        except PermissionError:
+        except (FileNotFoundError, PermissionError):
             self.show_info("Output File Error!")
             return
         self.show_info("Done!")
