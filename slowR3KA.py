@@ -3,7 +3,7 @@
 """
 
 
-__version__ = "0.6.1"
+__version__ = "0.7.0"
 __author__  = "infval"
 
 
@@ -71,7 +71,7 @@ SID     = ( 0,  6)
 BID     = (16,  5)
 CO      = (25,  1)
 MVFUNC  = (21,  5)
-TLBID   = ( 0, 25) # (0, 6)
+TLBID   = ( 0, 25)  # (0, 6)
 
 START_ADDR = 0xF800
 
@@ -152,7 +152,7 @@ def BC(inst, data):
 
 itree = ("unknown", Unknown, OPCODE,
 {
-    0o00 : ("unknown", Unknown, SID, # SPECIAL
+    0o00 : ("unknown", Unknown, SID,  # SPECIAL
         {
             0o00 : ("sll", ShiftAmount, ALLBITS,
                 {
@@ -188,7 +188,7 @@ itree = ("unknown", Unknown, OPCODE,
           , 0o53 : ("sltu"   , RegisterALU,   (0,0),{})
         }
     )
-  , 0o01 : ("unknown", Unknown, BID, # BCOND (REGIMM)
+  , 0o01 : ("unknown", Unknown, BID,  # BCOND (REGIMM)
         {
             0o00 : ("bltz"  , Bcond, (0,0),{})
           , 0o01 : ("bgez"  , Bcond, (0,0),{})
@@ -210,7 +210,7 @@ itree = ("unknown", Unknown, OPCODE,
   , 0o15 : ("ori"  , ImmediateALU,   (0,0),{})
   , 0o16 : ("xori" , ImmediateALU,   (0,0),{})
   , 0o17 : ("lui"  , ImmediateLUI,   (0,0),{})
-  , 0o20 : ("unknown", Unknown, CO, # COP0
+  , 0o20 : ("unknown", Unknown, CO,  # COP0
         {
             0o00 : ("unknown", Unknown, MVFUNC,
                 {
@@ -218,7 +218,7 @@ itree = ("unknown", Unknown, OPCODE,
                   , 0o04 : ("mtc0", CoprocessorMove, (0,0),{})
                 }
             )
-          , 0o01 : ("cop0", COP, TLBID, # TLB
+          , 0o01 : ("unknown", Unknown, TLBID,  #("cop0", COP, TLBID,  # TLB
                 {
                     0o01 : ("tlbr" , Empty, (0,0),{})
                   , 0o02 : ("tlbwi", Empty, (0,0),{})
@@ -229,26 +229,26 @@ itree = ("unknown", Unknown, OPCODE,
             )
         }
     )
-  , 0o21 : ("unknown", Unknown, CO, # COP1 (not valid for PSX)
-        {
-            0o00 : ("unknown", Unknown, MVFUNC,
-                {
-                    0o00 : ("mfc1", CoprocessorMove, (0,0),{})
-                  , 0o02 : ("cfc1", CoprocessorMove, (0,0),{})
-                  , 0o04 : ("mtc1", CoprocessorMove, (0,0),{})
-                  , 0o06 : ("ctc1", CoprocessorMove, (0,0),{})
-                  , 0o10 : ("unknown", Unknown, BID, # BC (cc = 0)
-                        {
-                            0o00 : ("bc1f", BC, (0,0),{})
-                          , 0o01 : ("bc1t", BC, (0,0),{})
-                        }
-                    )
-                }
-            )
-          , 0o01 : ("cop1", COP, (0,0),{})
-        }
-    )
-  , 0o22 : ("unknown", Unknown, CO, # COP2 (GTE)
+#  , 0o21 : ("unknown", Unknown, CO,  # COP1 (not valid for PSX)
+#        {
+#            0o00 : ("unknown", Unknown, MVFUNC,
+#                {
+#                    0o00 : ("mfc1", CoprocessorMove, (0,0),{})
+#                  , 0o02 : ("cfc1", CoprocessorMove, (0,0),{})
+#                  , 0o04 : ("mtc1", CoprocessorMove, (0,0),{})
+#                  , 0o06 : ("ctc1", CoprocessorMove, (0,0),{})
+#                  , 0o10 : ("unknown", Unknown, BID,  # BC (cc = 0)
+#                        {
+#                            0o00 : ("bc1f", BC, (0,0),{})
+#                          , 0o01 : ("bc1t", BC, (0,0),{})
+#                        }
+#                    )
+#                }
+#            )
+#          , 0o01 : ("cop1", COP, (0,0),{})
+#        }
+#    )
+  , 0o22 : ("unknown", Unknown, CO,  # COP2 (GTE)
         {
             0o00 : ("unknown", Unknown, MVFUNC,
                 {
@@ -261,19 +261,19 @@ itree = ("unknown", Unknown, OPCODE,
           , 0o01 : ("cop2", COP, (0,0),{})
         }
     )
-  , 0o23 : ("unknown", Unknown, CO, # COP3 (not valid for PSX)
-        {
-            0o00 : ("unknown", Unknown, MVFUNC,
-                {
-                    0o00 : ("mfc3", CoprocessorMove, (0,0),{})
-                  , 0o02 : ("cfc3", CoprocessorMove, (0,0),{})
-                  , 0o04 : ("mtc3", CoprocessorMove, (0,0),{})
-                  , 0o06 : ("ctc3", CoprocessorMove, (0,0),{})
-                }
-            )
-          , 0o01 : ("cop3", COP, (0,0),{})
-        }
-    )
+#  , 0o23 : ("unknown", Unknown, CO,  # COP3 (not valid for PSX)
+#        {
+#            0o00 : ("unknown", Unknown, MVFUNC,
+#                {
+#                    0o00 : ("mfc3", CoprocessorMove, (0,0),{})
+#                  , 0o02 : ("cfc3", CoprocessorMove, (0,0),{})
+#                  , 0o04 : ("mtc3", CoprocessorMove, (0,0),{})
+#                  , 0o06 : ("ctc3", CoprocessorMove, (0,0),{})
+#                }
+#            )
+#          , 0o01 : ("cop3", COP, (0,0),{})
+#        }
+#    )
   , 0o40 : ("lb"   , LoadStoreInstruction, (0,0),{})
   , 0o41 : ("lh"   , LoadStoreInstruction, (0,0),{})
   , 0o42 : ("lwl"  , LoadStoreInstruction, (0,0),{})
@@ -286,14 +286,14 @@ itree = ("unknown", Unknown, OPCODE,
   , 0o52 : ("swl"  , LoadStoreInstruction, (0,0),{})
   , 0o53 : ("sw"   , LoadStoreInstruction, (0,0),{})
   , 0o56 : ("swr"  , LoadStoreInstruction, (0,0),{})
-  , 0o60 : ("lwc0" , LoadStoreInstruction, (0,0),{})
-  , 0o61 : ("lwc1" , LoadStoreInstruction, (0,0),{}) # not valid for PSX
+#  , 0o60 : ("lwc0" , LoadStoreInstruction, (0,0),{})  # not valid for PSX
+#  , 0o61 : ("lwc1" , LoadStoreInstruction, (0,0),{})  # not valid for PSX
   , 0o62 : ("lwc2" , LoadStoreInstruction, (0,0),{})
-  , 0o63 : ("lwc3" , LoadStoreInstruction, (0,0),{}) # not valid for PSX
-  , 0o70 : ("swc0" , LoadStoreInstruction, (0,0),{})
-  , 0o71 : ("swc1" , LoadStoreInstruction, (0,0),{}) # not valid for PSX
+#  , 0o63 : ("lwc3" , LoadStoreInstruction, (0,0),{})  # not valid for PSX
+#  , 0o70 : ("swc0" , LoadStoreInstruction, (0,0),{})  # not valid for PSX
+#  , 0o71 : ("swc1" , LoadStoreInstruction, (0,0),{})  # not valid for PSX
   , 0o72 : ("swc2" , LoadStoreInstruction, (0,0),{})
-  , 0o73 : ("swc3" , LoadStoreInstruction, (0,0),{}) # not valid for PSX
+#  , 0o73 : ("swc3" , LoadStoreInstruction, (0,0),{})  # not valid for PSX
 })
 
 
@@ -323,7 +323,7 @@ class PSXDisassembler:
         self.set_bytes(in_bytes)
 
         self.lines = []
-        try: # Faster insertion
+        try:  # Faster insertion
             from blist import blist
             self.lines = blist([])
         except ImportError:
@@ -380,10 +380,10 @@ class PSXDisassembler:
         del self.lines[:]
 
         if psig:
-            itree[3][0][3][0][3][0] = ("noop", Empty, (0,0),{}) # NOP -> NOOP
+            itree[3][0][3][0][3][0] = ("noop", Empty, (0,0),{})  # NOP -> NOOP
             line_format = lambda pc, func, inst, data: " {}\n".format(func(inst.upper(), data))
         else:
-            itree[3][0][3][0][3][0] = ("nop", Empty, (0,0),{}) # Revert
+            itree[3][0][3][0][3][0] = ("nop", Empty, (0,0),{})  # Revert
             line_format = lambda pc, func, inst, data: "0x{:08X} {}\n".format(pc, func(inst.upper(), data))
 
         for word in range(self.start, self.end, 4):
@@ -758,9 +758,12 @@ class Application(tk.Frame):
         menubar = tk.Menu(self.master)
 
         filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Open", accelerator="Crtl+O",
+        filemenu.add_command(label="Open...", accelerator="Crtl+O",
                              command=self.open_input)
-        filemenu.add_command(label="Save", accelerator="Crtl+S",
+        filemenu.add_command(label="Reload input file", accelerator="F5",
+                             command=self.reload_input)
+        filemenu.add_separator()
+        filemenu.add_command(label="Choose output file...", accelerator="Crtl+S",
                              command=self.open_output)
         filemenu.add_separator()
         filemenu.add_command(label="Exit",
@@ -768,12 +771,12 @@ class Application(tk.Frame):
         menubar.add_cascade(label="File", menu=filemenu)
 
         actionmenu = tk.Menu(menubar, tearoff=0)
-        actionmenu.add_command(label="Disassemble", accelerator="F5",
+        actionmenu.add_command(label="Disassemble", accelerator="F4",
                                command=self.process)
         menubar.add_cascade(label="Action", menu=actionmenu)
 
         toolsmenu = tk.Menu(menubar, tearoff=0)
-        toolsmenu.add_command(label="PS-X EXE header", accelerator="Crtl+H",
+        toolsmenu.add_command(label="PS-X EXE header...", accelerator="Crtl+H",
                               command=self.show_header)
         menubar.add_cascade(label="Tools", menu=toolsmenu)
 
@@ -793,8 +796,10 @@ class Application(tk.Frame):
 
     def key_press(self, e):
         if e.state == 0:
-            if e.keycode == 116:  # F5
+            if e.keycode == 115:  # F4
                 self.process()
+            elif e.keycode == 116:  # F5
+                self.reload_input()
         elif e.state == 4:  # Ctrl+
             if e.keycode == ord("O"):
                 self.open_input()
@@ -817,7 +822,7 @@ class Application(tk.Frame):
 
     def open_input(self):
         filetypes = [("All types", "*"),
-                     ("PS-X EXE", "*.exe")]
+                     ("PS-X EXE", "*.exe;*.psx")]
         filename = filedialog.askopenfilename(filetypes=filetypes)
         if filename != "":
             self.path_input_var.set(filename)
@@ -825,6 +830,10 @@ class Application(tk.Frame):
             self.input_entry.focus_set()
             self.input_entry.xview("end")
             self.input_entry.icursor("end")
+
+    def reload_input(self):
+        filename = self.path_input_var.get()
+        self.path_input_var.set(filename)
 
     def open_output(self):
         filetypes = [("Text file", "*.txt"),
