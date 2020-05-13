@@ -3,7 +3,7 @@
 """
 
 
-__version__ = "0.7.0"
+__version__ = "0.7.1"
 __author__  = "infval"
 
 
@@ -758,12 +758,12 @@ class Application(tk.Frame):
         menubar = tk.Menu(self.master)
 
         filemenu = tk.Menu(menubar, tearoff=0)
-        filemenu.add_command(label="Open...", accelerator="Crtl+O",
+        filemenu.add_command(label="Open...", accelerator="Ctrl+O",
                              command=self.open_input)
         filemenu.add_command(label="Reload input file", accelerator="F5",
                              command=self.reload_input)
         filemenu.add_separator()
-        filemenu.add_command(label="Choose output file...", accelerator="Crtl+S",
+        filemenu.add_command(label="Choose output file...", accelerator="Ctrl+S",
                              command=self.open_output)
         filemenu.add_separator()
         filemenu.add_command(label="Exit",
@@ -776,7 +776,7 @@ class Application(tk.Frame):
         menubar.add_cascade(label="Action", menu=actionmenu)
 
         toolsmenu = tk.Menu(menubar, tearoff=0)
-        toolsmenu.add_command(label="PS-X EXE header...", accelerator="Crtl+H",
+        toolsmenu.add_command(label="PS-X EXE header...", accelerator="Ctrl+H",
                               command=self.show_header)
         menubar.add_cascade(label="Tools", menu=toolsmenu)
 
@@ -795,12 +795,18 @@ class Application(tk.Frame):
         self.master.config(menu=menubar)
 
     def key_press(self, e):
-        if e.state == 0:
+        #print("keysym={} keycode={} char={} state={} keysym_num={}".format(
+        #     e.keysym, e.keycode, e.char, e.state, e.keysym_num))
+        TK_SHIFT = 1
+        TK_CTRL  = 4
+        TK_ALT   = 131072
+        state = e.state & (TK_SHIFT | TK_CTRL | TK_ALT)
+        if state == 0:
             if e.keycode == 115:  # F4
                 self.process()
             elif e.keycode == 116:  # F5
                 self.reload_input()
-        elif e.state == 4:  # Ctrl+
+        elif state == TK_CTRL:  # Ctrl+
             if e.keycode == ord("O"):
                 self.open_input()
             elif e.keycode == ord("S"):
